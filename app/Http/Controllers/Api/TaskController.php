@@ -6,11 +6,22 @@ use App\Http\Controllers\Controller;
 use App\Models\Task;
 use Illuminate\Http\Request;
 
+/**
+ * @group Tâches
+ *
+ * Endpoints pour gérer les tâches liées aux projets.
+ */
 class TaskController extends Controller
 {
     /**
-     * GET /api/tasks
-     * Liste toutes les tâches avec leur projet et la personne assignée.
+     * Liste toutes les tâches
+     *
+     * Retourne toutes les tâches avec leur projet et l'utilisateur assigné.
+     *
+     * @responseField title string Le titre de la tâche
+     * @responseField status string Le statut de la tâche (pending, in_progress, done)
+     * @responseField project object Projet associé
+     * @responseField assignee object Utilisateur assigné
      */
     public function index()
     {
@@ -20,8 +31,19 @@ class TaskController extends Controller
     }
 
     /**
-     * POST /api/tasks
-     * Crée une nouvelle tâche.
+     * Crée une nouvelle tâche
+     *
+     * @bodyParam title string required Le titre de la tâche. Exemple: Ajouter la page d'accueil
+     * @bodyParam description string Description de la tâche. Exemple: Doit contenir les boutons de connexion.
+     * @bodyParam status string Statut de la tâche. Doit être 'pending', 'in_progress' ou 'done'. Exemple: pending
+     * @bodyParam project_id int required ID du projet associé. Exemple: 1
+     * @bodyParam assigned_to int required ID de l'utilisateur assigné. Exemple: 2
+     *
+     * @response 201 {
+     *   "id": 1,
+     *   "title": "Ajouter la page d'accueil",
+     *   "status": "pending"
+     * }
      */
     public function store(Request $request)
     {
@@ -39,8 +61,11 @@ class TaskController extends Controller
     }
 
     /**
-     * GET /api/tasks/{id}
-     * Affiche une tâche avec ses relations.
+     * Affiche une tâche
+     *
+     * Retourne les détails d'une tâche, son projet et la personne assignée.
+     *
+     * @urlParam id int required ID de la tâche à afficher. Exemple: 1
      */
     public function show($id)
     {
@@ -50,8 +75,12 @@ class TaskController extends Controller
     }
 
     /**
-     * PUT /api/tasks/{id}
-     * Met à jour une tâche existante.
+     * Met à jour une tâche
+     *
+     * @urlParam id int required ID de la tâche à modifier. Exemple: 1
+     * @bodyParam title string Nouveau titre. Exemple: Nouvelle tâche
+     * @bodyParam description string Nouvelle description
+     * @bodyParam status string Nouveau statut (pending, in_progress, done). Exemple: done
      */
     public function update(Request $request, $id)
     {
@@ -69,8 +98,13 @@ class TaskController extends Controller
     }
 
     /**
-     * DELETE /api/tasks/{id}
-     * Supprime une tâche.
+     * Supprime une tâche
+     *
+     * @urlParam id int required ID de la tâche à supprimer. Exemple: 1
+     *
+     * @response 200 {
+     *   "message": "Tâche supprimée avec succès."
+     * }
      */
     public function destroy($id)
     {
