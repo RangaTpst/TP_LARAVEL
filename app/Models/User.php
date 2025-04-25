@@ -45,4 +45,16 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function projects()
+{
+    // Un utilisateur possède plusieurs projets
+    return $this->hasMany(Project::class, 'owner_id');
+}
+
+public function assignedTasks()
+{
+    // Un utilisateur peut recevoir plusieurs tâches
+    return $this->hasMany(Task::class, 'assigned_to');
+}
+
 }
