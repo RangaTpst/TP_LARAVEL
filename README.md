@@ -1,61 +1,171 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# 📋 **README - Projet Laravel avec Docker, API et Tests**
 
-## About Laravel
+## 🌟 **Résumé du projet**
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Ce projet est une **application Laravel** intégrée avec une **API REST** sécurisée utilisant **Sanctum** pour l'authentification par token. L'application utilise **Docker** pour l'environnement de développement et de production. Elle permet de gérer des projets et des tâches pour des utilisateurs authentifiés via une API. Le tout est accompagné de **tests automatisés** pour valider les fonctionnalités essentielles.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🔧 **Technologies utilisées**
 
-## Learning Laravel
+- **Laravel 12** : Framework PHP moderne
+- **Docker** : Conteneurisation des services (PHP, MySQL, Apache)
+- **Sanctum** : Authentification API avec tokens personnels
+- **Vue.js (optionnel)** : Composant interactif pour l'interface utilisateur
+- **MySQL** : Base de données pour stocker les utilisateurs, projets et tâches
+- **API RESTful** : Routes pour gérer les projets et les tâches via des requêtes GET, POST, PUT, DELETE
+- **PHPUnit** : Tests unitaires pour valider l'API
+- **Git** : Versionnement du code source
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## 🛠️ **Installation et configuration**
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 1. **Pré-requis**
 
-## Laravel Sponsors
+Avant de commencer, assurez-vous que vous avez installé :
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- **Docker** : [Installer Docker](https://www.docker.com/get-started)
+- **Composer** : [Installer Composer](https://getcomposer.org/)
+- **Node.js** et **NPM** pour la gestion des dépendances frontend : [Installer Node.js](https://nodejs.org/)
 
-### Premium Partners
+### 2. **Cloner le repository**
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development/)**
-- **[Active Logic](https://activelogic.com)**
+Clonez le repository du projet sur votre machine locale :
 
-## Contributing
+```bash
+git clone https://github.com/ton-repository.git
+cd ton-repository
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 3. **Configurer l'environnement Docker**
 
-## Code of Conduct
+#### a. **Fichier `.env`**
+Modifiez le fichier `.env` pour définir les paramètres de la base de données avec Docker :
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```env
+DB_CONNECTION=mysql
+DB_HOST=db
+DB_PORT=3306
+DB_DATABASE=laravel
+DB_USERNAME=laravel
+DB_PASSWORD=laravel
+```
 
-## Security Vulnerabilities
+#### b. **Lancer les conteneurs Docker**
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Dans le répertoire du projet, lancez les conteneurs Docker :
 
-## License
+```bash
+docker-compose up -d
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Cela va démarrer les services nécessaires : **PHP**, **MySQL**, **Apache**, et la **base de données**.
+
+#### c. **Exécuter les migrations et seeds**
+
+Pour générer les tables nécessaires dans la base de données et peupler les tables avec des utilisateurs de test, exécutez :
+
+```bash
+docker exec -it laravel-app php artisan migrate --seed
+```
+
+---
+
+## 🔐 **Authentification API avec Sanctum**
+
+L'authentification est gérée via **Sanctum**, ce qui permet de créer des tokens pour l'accès aux API.
+
+### 1. **Route de login**
+
+Pour obtenir un **token**, envoyez une requête **POST** à `/api/login` avec les informations de connexion :
+
+```json
+{
+  "email": "test@example.com",
+  "password": "password"
+}
+```
+
+La réponse renverra un **token** que vous pourrez utiliser pour sécuriser les autres routes.
+
+### 2. **Routes protégées**
+
+Les routes suivantes sont protégées par **Sanctum** et nécessitent un **token** valide dans l'en-tête `Authorization` :
+
+- **GET** `/api/user` : Récupère l'utilisateur connecté
+- **POST** `/api/logout` : Déconnecte l'utilisateur et révoque le token
+- **API Projects et Tasks** : Les routes de gestion des projets et des tâches
+
+---
+
+## ⚙️ **Configuration de Vue.js (Optionnel)**
+
+Si vous souhaitez ajouter une interface dynamique avec Vue.js, suivez les étapes suivantes :
+
+1. **Installer Vue.js** via npm :
+   ```bash
+   docker exec -it laravel-app npm install vue@next vue-loader@next --save-dev
+   ```
+
+2. **Configurer Webpack (laravel-mix)** pour Vue.js dans le fichier `webpack.mix.js` :
+
+```javascript
+const mix = require('laravel-mix');
+
+mix.js('resources/js/app.js', 'public/js')
+   .vue()  // Permet d'utiliser Vue.js
+   .sass('resources/sass/app.scss', 'public/css');
+```
+
+3. **Créer un composant Vue** dans `resources/js/components/ExampleComponent.vue`.
+
+4. **Afficher le composant dans Blade** en l'ajoutant dans une vue Laravel `home.blade.php`.
+
+---
+
+## 🧪 **Tests API avec PHPUnit**
+
+Les tests sont écrits en **PHPUnit** pour vérifier les fonctionnalités suivantes :
+
+1. **Test de création d'un projet** : Vérifie la création d'un projet via l'API.
+2. **Test de récupération des projets** : Vérifie que les projets sont retournés correctement via l'API.
+3. **Test de mise à jour d'un projet** : Vérifie que la mise à jour d'un projet fonctionne bien.
+4. **Test de suppression d'un projet** : Vérifie que la suppression d'un projet fonctionne.
+
+### Lancer les tests :
+
+Pour exécuter les tests PHPUnit dans le conteneur Docker, utilisez cette commande :
+
+```bash
+docker exec -it laravel-app php artisan test
+```
+
+---
+
+## 📝 **Récapitulatif des routes API**
+
+| Méthode | Route                | Description |
+|---------|----------------------|-------------|
+| POST    | /api/login           | Authentification |
+| GET     | /api/user            | Récupérer les informations de l'utilisateur connecté |
+| POST    | /api/logout          | Déconnexion |
+| GET     | /api/projects        | Liste des projets |
+| POST    | /api/projects        | Créer un projet |
+| GET     | /api/projects/{id}   | Détails d'un projet |
+| PUT     | /api/projects/{id}   | Mettre à jour un projet |
+| DELETE  | /api/projects/{id}   | Supprimer un projet |
+| GET     | /api/tasks           | Liste des tâches |
+| POST    | /api/tasks           | Créer une tâche |
+| GET     | /api/tasks/{id}      | Détails d'une tâche |
+| PUT     | /api/tasks/{id}      | Mettre à jour une tâche |
+| DELETE  | /api/tasks/{id}      | Supprimer une tâche |
+
+---
+
+## 🏁 **Conclusion**
+
+Ce projet implémente une **API sécurisée avec Sanctum** et un **système de gestion de projets et tâches**. Il est entièrement configuré avec **Docker**, permettant un développement rapide dans un environnement conteneurisé. Tous les tests sont passés avec **PHPUnit**, garantissant la robustesse de l'application.
+
+Si vous avez des questions ou besoin de plus d'informations, n'hésitez pas à me contacter !

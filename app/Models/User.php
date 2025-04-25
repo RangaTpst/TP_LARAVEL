@@ -2,18 +2,23 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens; // 👈 Requis pour l'authentification via Sanctum
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    /**
+     * Traits utilisés :
+     * - HasApiTokens : permet de générer des tokens avec Sanctum
+     * - HasFactory : pour les seeders / factories
+     * - Notifiable : pour les notifications
+     */
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
-     * The attributes that are mass assignable.
+     * Les attributs que l'on peut remplir en masse (mass assignable).
      *
      * @var list<string>
      */
@@ -24,7 +29,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
+     * Les attributs cachés lors de la sérialisation (par ex. API JSON).
      *
      * @var list<string>
      */
@@ -34,7 +39,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * Les attributs qui doivent être castés automatiquement.
      *
      * @return array<string, string>
      */
@@ -45,16 +50,20 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Relation : un utilisateur peut posséder plusieurs projets.
+     */
     public function projects()
-{
-    // Un utilisateur possède plusieurs projets
-    return $this->hasMany(Project::class, 'owner_id');
-}
+    {
+        return $this->hasMany(Project::class, 'owner_id');
+    }
 
-public function assignedTasks()
-{
-    // Un utilisateur peut recevoir plusieurs tâches
-    return $this->hasMany(Task::class, 'assigned_to');
-}
-
+    /**
+     * Relation : un utilisateur peut avoir plusieurs tâches assignées.
+     */
+    public function assignedTasks()
+    {
+        return $this->hasMany(Task::class, 'assigned_to');
+    }
 }
